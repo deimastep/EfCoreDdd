@@ -1,9 +1,11 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("PurchaseApproval.Infrastructure")]
-[assembly: AssemblyDescription("Purchase Approval infrastructure implementation")]
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("PurchaseApproval.Tests.Core")]
+[assembly: AssemblyDescription("Purchase Approval testing core")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
@@ -11,6 +13,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("49259552-03fa-45fd-bc2f-9feb159e7d27")]
-
-[assembly: InternalsVisibleTo("PurchaseApproval.Infrastructure.Tests")]
+[assembly: Guid("2fa01585-e39a-419d-a454-d7aa36d9c2bd")]

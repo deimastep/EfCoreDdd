@@ -209,21 +209,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\20170217154416_First.cs" />
-    <Compile Include="Migrations\20170217154416_First.designer.cs">
-      <DependentUpon>20170217154416_First.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\EfDbContextModelSnapshot.cs" />
+    <Compile Include="Persistence\ApprovalRepository.cs" />
     <Compile Include="Persistence\EfDbContext.cs" />
+    <Compile Include="Persistence\Migrations\20170508114714_First.cs" />
+    <Compile Include="Persistence\Migrations\20170508114714_First.designer.cs">
+      <DependentUpon>20170508114714_First.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations\EfDbContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Settings.StyleCop" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Persistence\Migrations\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj">
       <Project>{5bdb0c88-f0f3-4887-814e-ddb334e64131}</Project>

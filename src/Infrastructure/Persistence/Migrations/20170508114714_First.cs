@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace PurchaseApproval.Infrastructure.Migrations
+namespace PurchaseApproval.Infrastructure.Persistence.Migrations
 {
     public partial class First : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Requests",
+                name: "Approvals",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -18,26 +18,26 @@ namespace PurchaseApproval.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Requests", x => x.Id);
+                    table.PrimaryKey("PK_Approvals", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Approvals",
+                name: "Decisions",
                 columns: table => new
                 {
-                    RequestId = table.Column<Guid>(nullable: false),
+                    ApprovalId = table.Column<Guid>(nullable: false),
                     Number = table.Column<int>(nullable: false),
+                    Answer = table.Column<string>(unicode: false, maxLength: 20, nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    Decision = table.Column<string>(unicode: false, maxLength: 20, nullable: false),
                     ValidTill = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Approvals", x => new { x.RequestId, x.Number });
+                    table.PrimaryKey("PK_Decisions", x => new { x.ApprovalId, x.Number });
                     table.ForeignKey(
-                        name: "FK_Approvals_Requests_RequestId",
-                        column: x => x.RequestId,
-                        principalTable: "Requests",
+                        name: "FK_Decisions_Approvals_ApprovalId",
+                        column: x => x.ApprovalId,
+                        principalTable: "Approvals",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -46,10 +46,10 @@ namespace PurchaseApproval.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Approvals");
+                name: "Decisions");
 
             migrationBuilder.DropTable(
-                name: "Requests");
+                name: "Approvals");
         }
     }
 }

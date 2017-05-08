@@ -1,9 +1,7 @@
 ﻿namespace PurchaseApproval.Domain
 {
-    using System;
-
-    public interface IAggregateRoot : IEntity
+    public interface IAggregateRoot<out TId> : IEntity
     {
-        Guid Id { get; }
+        TId Id { get; }
     }
 }

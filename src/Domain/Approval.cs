@@ -1,36 +1,56 @@
 ﻿namespace PurchaseApproval.Domain
 {
     using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
 
-    public class Approval : IApproval
+    public class Approval : IAggregateRoot<Guid>
     {
-        public int Number { get; set; }
+        public Guid Id { get; protected set; }
 
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime ValidTill { get; set; }
+        public DateTime CreatedAt { get; protected set; }
 
         [MaxLength(20)]
-        public string Decision { get; set; }
+        public string Status { get; protected set; }
 
-        //public RequestData RequestData { get; set; }
+        public IEnumerable<Decision> Decisions => _decisions;
 
-    }
+        private readonly List<Decision> _decisions;
 
-    public class RequestData
-    {
-        public string Data { get; protected set; }
-    }
+        private Approval()
+        {
+            _decisions = new List<Decision>();
+        }
 
-    public interface IApproval : IEntity
-    {
-        int Number { get; }
+        public Approval(Guid id, DateTime createdAt) : this()
+        {
+            Id = id;
+            CreatedAt = createdAt;
+            Status = "Created";
+        }
 
-        DateTime CreatedAt { get; }
+        public void InProgress()
+        {
+            Status = "InProgress";
+        }
 
-        DateTime ValidTill { get; }
+        public void NewDecision(string answer)
+        {
+            var number = _decisions.Count != 0 ? _decisions.Max(a => a.Number) + 1 : 1;
+            _decisions.Add(new Decision(number, DateTime.Now, DateTime.Now.AddDays(30), answer));
+        }
 
-        string Decision { get; }
+        public bool CancelDecision(int number)
+        {
+            var item = _decisions.FirstOrDefault(d => d.Number == number);
+            if (item == null)
+            {
+                return false;
+            }
+            _decisions.Remove(item);
+            return true;
+        }
     }
 }

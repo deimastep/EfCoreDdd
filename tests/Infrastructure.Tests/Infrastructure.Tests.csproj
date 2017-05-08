@@ -206,7 +206,8 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="DebugLoggerProvider.cs" />
-    <Compile Include="Persistence\RequestPersistenceTest.cs" />
+    <Compile Include="Persistence\ApprovalPersistenceTest.cs" />
+    <Compile Include="Persistence\GlobalFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

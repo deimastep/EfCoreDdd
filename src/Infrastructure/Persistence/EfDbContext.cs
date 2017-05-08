@@ -11,11 +11,11 @@
 
     public class EfDbContext : DbContext
     {
-        internal DbSet<Request> Requests { get; set; }
-
         internal DbSet<Approval> Approvals { get; set; }
 
-        internal const string RequestToApprovalsNavigationName = "_approvals";
+        internal DbSet<Decision> Decisions { get; set; }
+
+        internal const string RequestToApprovalsNavigationName = "_decisions";
 
         public EfDbContext()
         {
@@ -32,29 +32,36 @@
                 return;
             }
             var connectionString = ConfigurationManager.ConnectionStrings["PurchaseApproval"]?.ConnectionString
-                ?? @"Server=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|PurchaseApproval.mdf;Database=PurchaseApproval;Trusted_Connection=True;";
+                ?? @"Server=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|PurchaseApprovalDB.mdf;Database=PurchaseApproval-TEST;Trusted_Connection=True;";
             optionsBuilder.UseSqlServer(connectionString);
-            optionsBuilder.ConfigureWarnings(wa => wa.Ignore(CoreEventId.ModelValidationWarning));
+            optionsBuilder
+                .ConfigureWarnings(wa => wa.Log(CoreEventId.ModelValidationWarning))
+                .ConfigureWarnings(wa => wa.Throw(CoreEventId.IncludeIgnoredWarning))
+                .ConfigureWarnings(wa => wa.Throw(RelationalEventId.QueryClientEvaluationWarning));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            const string approvalRequestId = "RequestId";
+            const string approvalId = "ApprovalId";
 
-            modelBuilder.Entity<Request>(r =>
+            modelBuilder.Entity<Approval>(r =>
             {
                 r.HasKey(e => e.Id);
                 r.Property(e => e.Status).IsRequired().IsUnicode(false);
-                r.Ignore(e => e.Approvals);
-                r.HasMany(typeof(Approval), RequestToApprovalsNavigationName)
-                    .WithOne().HasForeignKey(approvalRequestId).OnDelete(DeleteBehavior.Cascade);
+
+                /*r.Ignore(e => e.Decisions);
+                r.HasMany(typeof(Decision), RequestToApprovalsNavigationName)
+                    .WithOne().HasForeignKey(approvalId).OnDelete(DeleteBehavior.Cascade);*/
+                //r.Property(e => e.Decisions).HasField(RequestToApprovalsNavigationName);
+                r.HasMany(e => e.Decisions)
+                    .WithOne().HasForeignKey(approvalId).OnDelete(DeleteBehavior.Cascade); ;
             });
-            modelBuilder.Entity<Approval>(a =>
+            modelBuilder.Entity<Decision>(a =>
             {
-                a.Property<Guid>(approvalRequestId);
+                a.Property<Guid>(approvalId);
                 a.Property(e => e.Number);
-                a.HasKey(approvalRequestId, nameof(Approval.Number));
-                a.Property(e => e.Decision).IsRequired().IsUnicode(false);
+                a.HasKey(approvalId, nameof(Decision.Number));
+                a.Property(e => e.Answer).IsRequired().IsUnicode(false);
             });
         }
     }

@@ -1,9 +1,8 @@
 ﻿namespace PurchaseApproval.Domain
 {
     using System;
-    using System.ComponentModel.DataAnnotations;
 
-    public class Decision
+    public class Decision : IDecision
     {
         public Decision(int number, DateTime createdAt, DateTime validTill, string answer)
         {
@@ -24,7 +23,6 @@
 
         public DateTime ValidTill { get; protected set; }
 
-        [MaxLength(20)]
         public string Answer { get; protected set; }
     }
 }

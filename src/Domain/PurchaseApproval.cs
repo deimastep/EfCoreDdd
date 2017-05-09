@@ -2,38 +2,35 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
-    public class Approval : IAggregateRoot<Guid>
+    public class PurchaseApproval : IAggregateRoot<Guid>
     {
         public Guid Id { get; protected set; }
 
-        public DateTime CreatedAt { get; protected set; }
-
-        [MaxLength(20)]
         public string Status { get; protected set; }
+
+        public DateTime CreatedAt { get; protected set; }
 
         public IEnumerable<Decision> Decisions => _decisions;
 
         private readonly List<Decision> _decisions;
 
-        private Approval()
+        private PurchaseApproval()
         {
             _decisions = new List<Decision>();
         }
 
-        public Approval(Guid id, DateTime createdAt) : this()
+        public PurchaseApproval(Guid id, DateTime createdAt) : this()
         {
             Id = id;
             CreatedAt = createdAt;
-            Status = "Created";
+            Status = "InProgress";
         }
 
-        public void InProgress()
+        public void Close()
         {
-            Status = "InProgress";
+            Status = "Closed";
         }
 
         public void NewDecision(string answer)

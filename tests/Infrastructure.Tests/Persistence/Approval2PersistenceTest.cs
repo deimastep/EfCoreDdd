@@ -10,17 +10,17 @@
     using Xunit.Abstractions;
 
     [Collection(GlobalFixture.CollectionName)]
-    public sealed class ApprovalPersistenceTest : IDisposable
+    public sealed class Approval2PersistenceTest : IDisposable
     {
         #region Fixture ...
 
         private readonly ITestOutputHelper _console;
-        private readonly List<DomainDbContext> _dbContexts;
+        private readonly List<Domain2DbContext> _dbContexts;
 
-        public ApprovalPersistenceTest(ITestOutputHelper console)
+        public Approval2PersistenceTest(ITestOutputHelper console)
         {
             _console = console;
-            _dbContexts = new List<DomainDbContext>();
+            _dbContexts = new List<Domain2DbContext>();
         }
 
         public void Dispose()
@@ -31,9 +31,9 @@
             }
         }
 
-        private DomainDbContext GetDb()
+        private Domain2DbContext GetDb()
         {
-            var db = new DomainDbContext();
+            var db = new Domain2DbContext();
             _dbContexts.Add(db);
             return db;
         }
@@ -43,7 +43,7 @@
         [Fact]
         public async Task Approval_CanBeCreated()
         {
-            var expected = new PurchaseApproval(Guid.NewGuid(), DateTime.Now);
+            var expected = new PurchaseApproval2(Guid.NewGuid(), DateTime.Now);
             expected.NewDecision("YwC");
 
             var db = GetDb();
@@ -52,7 +52,7 @@
 
             db = GetDb();
             var actual = await db.Approvals
-                .Include(a => a.Decisions)
+                .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == expected.Id);
             Assert.True(expected.EqualByProperties(actual, _console));
         }
@@ -60,7 +60,7 @@
         [Fact]
         public async Task Approval_CanBeChanged()
         {
-            var expected = new PurchaseApproval(Guid.NewGuid(), DateTime.Now);
+            var expected = new PurchaseApproval2(Guid.NewGuid(), DateTime.Now);
             expected.NewDecision("YwC");
             var id = expected.Id;
 
@@ -70,14 +70,14 @@
 
             db = GetDb();
             expected = await db.Approvals
-                .Include(a => a.Decisions)
+                .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == id);
             expected.Close();
             await db.SaveChangesAsync();
 
             db = GetDb();
             var actual = await db.Approvals
-                .Include(a => a.Decisions)
+                .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == id);
             Assert.True(expected.EqualByProperties(actual, _console));
         }
@@ -85,7 +85,7 @@
         [Fact]
         public async Task Decision_CanBeAdded()
         {
-            var expected = new PurchaseApproval(Guid.NewGuid(), DateTime.Now);
+            var expected = new PurchaseApproval2(Guid.NewGuid(), DateTime.Now);
             var db = GetDb();
             db.Add(expected);
             await db.SaveChangesAsync();
@@ -93,14 +93,14 @@
 
             db = GetDb();
             expected = await db.Approvals
-                .Include(a => a.Decisions)
+                .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == id);
             expected.NewDecision("Yes");
             await db.SaveChangesAsync();
 
             db = GetDb();
             var actual = await db.Approvals
-                .Include(a => a.Decisions)
+                .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == id);
             Assert.True(expected.EqualByProperties(actual, _console));
         }
@@ -108,7 +108,7 @@
         [Fact]
         public async Task Decision_CanBeRemoved()
         {
-            var expected = new PurchaseApproval(Guid.NewGuid(), DateTime.Now);
+            var expected = new PurchaseApproval2(Guid.NewGuid(), DateTime.Now);
             expected.NewDecision("YwC");
             var db = GetDb();
             db.Add(expected);
@@ -117,14 +117,14 @@
 
             db = GetDb();
             expected = await db.Approvals
-                .Include(a => a.Decisions)
+                .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == id);
             expected.CancelDecision(1);
             await db.SaveChangesAsync();
 
             db = GetDb();
             var actual = await db.Approvals
-                .Include(a => a.Decisions)
+                .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == id);
             Assert.True(expected.EqualByProperties(actual, _console));
         }

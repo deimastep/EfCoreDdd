@@ -1,27 +1,23 @@
 ﻿namespace PurchaseApproval.Infrastructure.Persistence
 {
     using System;
-    using System.Collections.Generic;
     using System.Configuration;
     using Domain;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Infrastructure;
     using Microsoft.EntityFrameworkCore.Metadata;
-    using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-    public class EfDbContext : DbContext
+    public class Domain2DbContext : DbContext
     {
-        internal DbSet<Approval> Approvals { get; set; }
+        public DbSet<PurchaseApproval2> Approvals { get; set; }
 
-        internal DbSet<Decision> Decisions { get; set; }
+        internal const string ApprovalToDecisionsNavigationName = "DecisionsInternal";
 
-        internal const string RequestToApprovalsNavigationName = "_decisions";
-
-        public EfDbContext()
+        public Domain2DbContext()
         {
         }
 
-        public EfDbContext(DbContextOptions<EfDbContext> options) : base(options)
+        public Domain2DbContext(DbContextOptions<DomainDbContext> options) : base(options)
         {
         }
 
@@ -44,24 +40,20 @@
         {
             const string approvalId = "ApprovalId";
 
-            modelBuilder.Entity<Approval>(r =>
+            modelBuilder.Entity<PurchaseApproval2>(b =>
             {
-                r.HasKey(e => e.Id);
-                r.Property(e => e.Status).IsRequired().IsUnicode(false);
-
-                /*r.Ignore(e => e.Decisions);
-                r.HasMany(typeof(Decision), RequestToApprovalsNavigationName)
-                    .WithOne().HasForeignKey(approvalId).OnDelete(DeleteBehavior.Cascade);*/
-                //r.Property(e => e.Decisions).HasField(RequestToApprovalsNavigationName);
-                r.HasMany(e => e.Decisions)
-                    .WithOne().HasForeignKey(approvalId).OnDelete(DeleteBehavior.Cascade); ;
+                b.HasKey(e => e.Id);
+                b.Property(e => e.Status).HasMaxLength(20).IsRequired().IsUnicode(false);
+                b.Ignore(e => e.Decisions);
+                b.HasMany(typeof(Decision), ApprovalToDecisionsNavigationName)
+                    .WithOne().HasForeignKey(approvalId).OnDelete(DeleteBehavior.Cascade);
             });
-            modelBuilder.Entity<Decision>(a =>
+            modelBuilder.Entity<Decision>(b =>
             {
-                a.Property<Guid>(approvalId);
-                a.Property(e => e.Number);
-                a.HasKey(approvalId, nameof(Decision.Number));
-                a.Property(e => e.Answer).IsRequired().IsUnicode(false);
+                b.Property<Guid>(approvalId);
+                b.Property(e => e.Number);
+                b.HasKey(approvalId, nameof(Decision.Number));
+                b.Property(e => e.Answer).HasMaxLength(20).IsRequired().IsUnicode(false);
             });
         }
     }

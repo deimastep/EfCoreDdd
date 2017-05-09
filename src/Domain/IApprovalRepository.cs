@@ -1,13 +1,14 @@
 ﻿namespace PurchaseApproval.Domain
 {
     using System;
+    using System.Threading.Tasks;
 
     public interface IApprovalRepository
     {
-        Approval GetById(Guid id);
+        Task<PurchaseApproval> GetById(Guid id);
 
-        void Add(Approval approval);
+        void Add(PurchaseApproval approval);
 
-        void Save();
+        Task Save();
     }
 }

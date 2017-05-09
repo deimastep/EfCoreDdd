@@ -7,8 +7,8 @@ using PurchaseApproval.Infrastructure.Persistence;
 
 namespace PurchaseApproval.Infrastructure.Persistence.Migrations
 {
-    [DbContext(typeof(EfDbContext))]
-    partial class EfDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(DomainDbContext))]
+    partial class DomainDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -16,7 +16,7 @@ namespace PurchaseApproval.Infrastructure.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("PurchaseApproval.Domain.Approval", b =>
+            modelBuilder.Entity("PurchaseApproval.Domain.PurchaseApproval", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -30,7 +30,7 @@ namespace PurchaseApproval.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Approvals");
+                    b.ToTable("PurchaseApprovals");
                 });
 
             modelBuilder.Entity("PurchaseApproval.Domain.Decision", b =>
@@ -55,7 +55,7 @@ namespace PurchaseApproval.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("PurchaseApproval.Domain.Decision", b =>
                 {
-                    b.HasOne("PurchaseApproval.Domain.Approval")
+                    b.HasOne("PurchaseApproval.Domain.PurchaseApproval")
                         .WithMany("Decisions")
                         .HasForeignKey("ApprovalId")
                         .OnDelete(DeleteBehavior.Cascade);

@@ -7,7 +7,7 @@ using PurchaseApproval.Infrastructure.Persistence;
 
 namespace PurchaseApproval.Infrastructure.Persistence.Migrations
 {
-    [DbContext(typeof(EfDbContext))]
+    [DbContext(typeof(DomainDbContext))]
     [Migration("20170508114714_First")]
     partial class First
     {
@@ -17,7 +17,7 @@ namespace PurchaseApproval.Infrastructure.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("PurchaseApproval.Domain.Approval", b =>
+            modelBuilder.Entity("PurchaseApproval.Domain.PurchaseApproval", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -56,7 +56,7 @@ namespace PurchaseApproval.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("PurchaseApproval.Domain.Decision", b =>
                 {
-                    b.HasOne("PurchaseApproval.Domain.Approval")
+                    b.HasOne("PurchaseApproval.Domain.PurchaseApproval")
                         .WithMany("Decisions")
                         .HasForeignKey("ApprovalId")
                         .OnDelete(DeleteBehavior.Cascade);

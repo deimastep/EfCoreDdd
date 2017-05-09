@@ -11,7 +11,7 @@
 
         public GlobalFixture()
         {
-            using (var db = new EfDbContext())
+            using (var db = new DomainDbContext())
             {
                 var serviceProvider = db.GetInfrastructure();
                 var loggerFactory = serviceProvider.GetService<ILoggerFactory>();

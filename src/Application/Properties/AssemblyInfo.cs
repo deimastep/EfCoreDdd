@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("PurchaseApproval.Application")]
@@ -11,3 +12,5 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("2912d7bd-4d30-4e29-82b3-eeaa2671a819")]
+
+[assembly: InternalsVisibleTo("PurchaseApproval.Application.Tests")]

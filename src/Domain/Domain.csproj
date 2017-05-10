@@ -38,8 +38,10 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="ApprovalData.cs" />
     <Compile Include="Decision.cs" />
     <Compile Include="IAggregateRoot.cs" />
+    <Compile Include="IApprovalData.cs" />
     <Compile Include="IApprovalRepository.cs" />
     <Compile Include="IDecision.cs" />
     <Compile Include="IEntity.cs" />

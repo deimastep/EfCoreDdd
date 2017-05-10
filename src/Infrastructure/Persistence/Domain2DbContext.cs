@@ -12,6 +12,7 @@
         public DbSet<PurchaseApproval2> Approvals { get; set; }
 
         internal const string ApprovalToDecisionsNavigationName = "DecisionsInternal";
+        internal const string ApprovalToDataNavigationName = "DataInternal";
 
         public Domain2DbContext()
         {
@@ -38,21 +39,31 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            const string approvalId = "ApprovalId";
-
             modelBuilder.Entity<PurchaseApproval2>(b =>
             {
+                b.ToTable("Approvals");
                 b.HasKey(e => e.Id);
                 b.Property(e => e.Status).HasMaxLength(20).IsRequired().IsUnicode(false);
                 b.Ignore(e => e.Decisions);
                 b.HasMany(typeof(Decision), ApprovalToDecisionsNavigationName)
-                    .WithOne().HasForeignKey(approvalId).OnDelete(DeleteBehavior.Cascade);
+                    .WithOne().HasForeignKey("ApprovalId").OnDelete(DeleteBehavior.Cascade);
+                b.HasOne(typeof(ApprovalData), ApprovalToDataNavigationName)
+                    .WithOne().HasForeignKey(typeof(ApprovalData), "Id").OnDelete(DeleteBehavior.Cascade);
+            });
+            modelBuilder.Entity<ApprovalData>(b =>
+            {
+                b.ToTable("ApprovalData");
+                b.Property<Guid>("Id");
+                b.HasKey("Id");
+                b.Property(e => e.CustomerId).HasMaxLength(10).IsRequired().IsUnicode(false);
+                b.HasIndex(e => e.CustomerId).HasName("IX_CustomerId");
             });
             modelBuilder.Entity<Decision>(b =>
             {
-                b.Property<Guid>(approvalId);
+                b.ToTable("Decisions");
+                b.Property<Guid>("ApprovalId");
                 b.Property(e => e.Number);
-                b.HasKey(approvalId, nameof(Decision.Number));
+                b.HasKey("ApprovalId", nameof(Decision.Number));
                 b.Property(e => e.Answer).HasMaxLength(20).IsRequired().IsUnicode(false);
             });
         }

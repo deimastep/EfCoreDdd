@@ -24,7 +24,7 @@
             var comparer = new ComparisonConfig
             {
                 CompareChildren = true,
-                IgnoreObjectTypes = true,
+                IgnoreObjectTypes = false,
                 MaxDifferences = int.MaxValue,
                 MembersToIgnore = ignoreList.ToList(),
             };

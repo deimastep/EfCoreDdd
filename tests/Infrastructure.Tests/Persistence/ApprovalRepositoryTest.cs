@@ -43,7 +43,7 @@
         [Fact]
         public async Task Approval_CanBeCreated()
         {
-            var expected = new PurchaseApproval(Guid.NewGuid(), DateTime.Now);
+            var expected = new PurchaseApproval(Guid.NewGuid(), "customerId", DateTime.Now);
             expected.NewDecision("YwC");
 
             var repo = GetRepo();
@@ -58,7 +58,7 @@
         [Fact]
         public async Task Approval_CanBeChanged()
         {
-            var expected = new PurchaseApproval(Guid.NewGuid(), DateTime.Now);
+            var expected = new PurchaseApproval(Guid.NewGuid(), "customerId", DateTime.Now);
             expected.NewDecision("YwC");
 
             var repo = GetRepo();
@@ -78,7 +78,7 @@
         [Fact]
         public async Task Decision_CanBeAdded()
         {
-            var expected = new PurchaseApproval(Guid.NewGuid(), DateTime.Now);
+            var expected = new PurchaseApproval(Guid.NewGuid(), "customerId", DateTime.Now);
             var repo = GetRepo();
             repo.Add(expected);
             await repo.Save();
@@ -96,7 +96,7 @@
         [Fact]
         public async Task Decision_CanBeRemoved()
         {
-            var expected = new PurchaseApproval(Guid.NewGuid(), DateTime.Now);
+            var expected = new PurchaseApproval(Guid.NewGuid(), "customerId", DateTime.Now);
             expected.NewDecision("YwC");
             var repo = GetRepo();
             repo.Add(expected);

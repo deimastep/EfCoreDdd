@@ -36,22 +36,32 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            const string approvalId = "ApprovalId";
-
             modelBuilder.Entity<PurchaseApproval>(b =>
-            {
-                b.HasKey(e => e.Id);
-                b.Property(e => e.Status).HasMaxLength(20).IsRequired().IsUnicode(false);
-                b.HasMany(e => e.Decisions)
-                    .WithOne().HasForeignKey(approvalId).OnDelete(DeleteBehavior.Cascade);
-            });
+                {
+                    b.ToTable("Approvals");
+                    b.HasKey(e => e.Id);
+                    b.Property(e => e.Status).HasMaxLength(20).IsRequired().IsUnicode(false);
+                    b.HasMany(e => e.Decisions)
+                        .WithOne().HasForeignKey("ApprovalId").OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne(e => e.Data)
+                        .WithOne().HasForeignKey(typeof(ApprovalData), "Id").OnDelete(DeleteBehavior.Cascade);
+                });
+            modelBuilder.Entity<ApprovalData>(b =>
+                {
+                    b.ToTable("ApprovalData");
+                    b.Property<Guid>("Id");
+                    b.HasKey("Id");
+                    b.Property(e => e.CustomerId).HasMaxLength(10).IsRequired().IsUnicode(false);
+                    b.HasIndex(e => e.CustomerId).HasName("IX_CustomerId");
+                });
             modelBuilder.Entity<Decision>(b =>
-            {
-                b.Property<Guid>(approvalId);
-                b.Property(e => e.Number);
-                b.HasKey(approvalId, nameof(Decision.Number));
-                b.Property(e => e.Answer).HasMaxLength(20).IsRequired().IsUnicode(false);
-            });
+                {
+                    b.ToTable("Decisions");
+                    b.Property<Guid>("ApprovalId");
+                    b.Property(e => e.Number);
+                    b.HasKey("ApprovalId", nameof(Decision.Number));
+                    b.Property(e => e.Answer).HasMaxLength(20).IsRequired().IsUnicode(false);
+                });
         }
     }
 }

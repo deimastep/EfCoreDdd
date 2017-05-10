@@ -16,16 +16,20 @@
 
         private readonly List<Decision> _decisions;
 
+        public ApprovalData Data { get; protected set; }
+
+        // LEAKY: ORM requirement for default ctor
         private PurchaseApproval()
         {
             _decisions = new List<Decision>();
         }
 
-        public PurchaseApproval(Guid id, DateTime createdAt) : this()
+        public PurchaseApproval(Guid id, string customerId, DateTime createdAt) : this()
         {
             Id = id;
             CreatedAt = createdAt;
             Status = "InProgress";
+            Data = new ApprovalData(customerId, null);
         }
 
         public void Close()
@@ -37,6 +41,7 @@
         {
             var number = _decisions.Count != 0 ? _decisions.Max(a => a.Number) + 1 : 1;
             _decisions.Add(new Decision(number, DateTime.Now, DateTime.Now.AddDays(30), answer));
+            Status = "DecisionMade";
         }
 
         public bool CancelDecision(int number)

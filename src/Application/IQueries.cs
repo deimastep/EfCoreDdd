@@ -8,6 +8,8 @@
     {
         Task<PurchaseApproval> GetById(Guid id);
 
-        IEnumerable<PurchaseApproval> GetByStatus(string status);
+        Task<IEnumerable<PurchaseApproval>> GetByStatus(string status);
+
+        Task<IEnumerable<PurchaseApproval>> GetByCustomer(string customerId);
     }
 }

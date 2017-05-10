@@ -4,7 +4,7 @@
 
     public class Decision : IDecision
     {
-        public Decision(int number, DateTime createdAt, DateTime validTill, string answer)
+        internal Decision(int number, DateTime createdAt, DateTime validTill, string answer)
         {
             Number = number;
             CreatedAt = createdAt;
@@ -12,7 +12,8 @@
             Answer = answer;
         }
 
-        // LEAKY: ORM requirement
+        // LEAKY: ORM requirement for default ctor
+        // ReSharper disable once UnusedMember.Local
         private Decision()
         {
         }

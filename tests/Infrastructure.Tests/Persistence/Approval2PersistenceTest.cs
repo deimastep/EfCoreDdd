@@ -43,7 +43,7 @@
         [Fact]
         public async Task Approval_CanBeCreated()
         {
-            var expected = new PurchaseApproval2(Guid.NewGuid(), DateTime.Now);
+            var expected = new PurchaseApproval2(Guid.NewGuid(), "CustomerId", DateTime.Now);
             expected.NewDecision("YwC");
 
             var db = GetDb();
@@ -53,6 +53,7 @@
             db = GetDb();
             var actual = await db.Approvals
                 .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
+                .Include(Domain2DbContext.ApprovalToDataNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == expected.Id);
             Assert.True(expected.EqualByProperties(actual, _console));
         }
@@ -60,7 +61,7 @@
         [Fact]
         public async Task Approval_CanBeChanged()
         {
-            var expected = new PurchaseApproval2(Guid.NewGuid(), DateTime.Now);
+            var expected = new PurchaseApproval2(Guid.NewGuid(), "CustomerId", DateTime.Now);
             expected.NewDecision("YwC");
             var id = expected.Id;
 
@@ -71,6 +72,7 @@
             db = GetDb();
             expected = await db.Approvals
                 .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
+                .Include(Domain2DbContext.ApprovalToDataNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == id);
             expected.Close();
             await db.SaveChangesAsync();
@@ -78,6 +80,7 @@
             db = GetDb();
             var actual = await db.Approvals
                 .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
+                .Include(Domain2DbContext.ApprovalToDataNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == id);
             Assert.True(expected.EqualByProperties(actual, _console));
         }
@@ -85,7 +88,7 @@
         [Fact]
         public async Task Decision_CanBeAdded()
         {
-            var expected = new PurchaseApproval2(Guid.NewGuid(), DateTime.Now);
+            var expected = new PurchaseApproval2(Guid.NewGuid(), "CustomerId", DateTime.Now);
             var db = GetDb();
             db.Add(expected);
             await db.SaveChangesAsync();
@@ -94,6 +97,7 @@
             db = GetDb();
             expected = await db.Approvals
                 .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
+                .Include(Domain2DbContext.ApprovalToDataNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == id);
             expected.NewDecision("Yes");
             await db.SaveChangesAsync();
@@ -101,6 +105,7 @@
             db = GetDb();
             var actual = await db.Approvals
                 .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
+                .Include(Domain2DbContext.ApprovalToDataNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == id);
             Assert.True(expected.EqualByProperties(actual, _console));
         }
@@ -108,7 +113,7 @@
         [Fact]
         public async Task Decision_CanBeRemoved()
         {
-            var expected = new PurchaseApproval2(Guid.NewGuid(), DateTime.Now);
+            var expected = new PurchaseApproval2(Guid.NewGuid(), "CustomerId", DateTime.Now);
             expected.NewDecision("YwC");
             var db = GetDb();
             db.Add(expected);
@@ -118,6 +123,7 @@
             db = GetDb();
             expected = await db.Approvals
                 .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
+                .Include(Domain2DbContext.ApprovalToDataNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == id);
             expected.CancelDecision(1);
             await db.SaveChangesAsync();
@@ -125,6 +131,7 @@
             db = GetDb();
             var actual = await db.Approvals
                 .Include(Domain2DbContext.ApprovalToDecisionsNavigationName)
+                .Include(Domain2DbContext.ApprovalToDataNavigationName)
                 .SingleOrDefaultAsync(a => a.Id == id);
             Assert.True(expected.EqualByProperties(actual, _console));
         }

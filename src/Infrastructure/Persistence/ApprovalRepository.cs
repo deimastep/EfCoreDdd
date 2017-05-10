@@ -18,6 +18,7 @@
         {
             return await _db.Approvals
                 .Include(a => a.Decisions)
+                .Include(a => a.Data)
                 .SingleAsync(a => a.Id == id);
         }
 

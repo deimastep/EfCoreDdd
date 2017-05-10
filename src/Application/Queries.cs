@@ -10,20 +10,21 @@
 
     public class Queries : IQueries
     {
-        private readonly DomainDbContext _db;
-        private readonly Expression<Func<Domain.PurchaseApproval, PurchaseApproval>> _map = a =>
-            new PurchaseApproval
+        internal static readonly Expression<Func<Domain.PurchaseApproval, PurchaseApproval>> MapExpression = a => new PurchaseApproval
+        {
+            Status = a.Status,
+            Decision = a.Decisions.OrderByDescending(d => d.CreatedAt).Select(d => new Decision
             {
-                Status = a.Status,
-                Decision = a.Decisions.OrderByDescending(d => d.CreatedAt).Select(d => new Decision
-                {
-                    Answer = d.Answer,
-                    ValidTill = d.ValidTill,
-                    CreatedAt = d.CreatedAt
-                }).FirstOrDefault(),
-                Id = a.Id,
-                CreatedAt = a.CreatedAt
-            };
+                Answer = d.Answer,
+                ValidTill = d.ValidTill,
+                CreatedAt = d.CreatedAt
+            }).FirstOrDefault(),
+            CustomerId = a.Data.CustomerId,
+            Id = a.Id,
+            CreatedAt = a.CreatedAt
+        };
+
+        private readonly DomainDbContext _db;
 
         public Queries(DomainDbContext db)
         {
@@ -34,15 +35,27 @@
         {
             return await _db.Approvals.AsNoTracking()
                 .Where(a => a.Id == id)
-                .Select(_map)
-                .SingleOrDefaultAsync();
+                .Select(MapExpression)
+                .SingleOrDefaultAsync()
+                .ConfigureAwait(false);
         }
 
-        public IEnumerable<PurchaseApproval> GetByStatus(string status)
+        public async Task<IEnumerable<PurchaseApproval>> GetByStatus(string status)
         {
-            return _db.Approvals.AsNoTracking()
+            return await _db.Approvals.AsNoTracking()
                 .Where(a => a.Status == status)
-                .Select(_map);
+                .Select(MapExpression)
+                .ToListAsync()
+                .ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<PurchaseApproval>> GetByCustomer(string customerId)
+        {
+            return await _db.Approvals.AsNoTracking()
+                .Where(a => a.Data.CustomerId == customerId)
+                .Select(MapExpression)
+                .ToListAsync()
+                .ConfigureAwait(false);
         }
     }
 }

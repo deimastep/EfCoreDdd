@@ -8,6 +8,8 @@
 
         public Decision Decision { get; set; }
 
+        public string CustomerId { get; set; }
+
         public Guid Id { get; set; }
 
         public DateTime CreatedAt { get; set; }

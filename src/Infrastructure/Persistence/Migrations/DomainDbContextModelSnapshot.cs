@@ -13,24 +13,26 @@ namespace PurchaseApproval.Infrastructure.Persistence.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
+                .HasAnnotation("ProductVersion", "1.1.1")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("PurchaseApproval.Domain.PurchaseApproval", b =>
+            modelBuilder.Entity("PurchaseApproval.Domain.ApprovalData", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<Guid>("Id");
 
-                    b.Property<DateTime>("CreatedAt");
-
-                    b.Property<string>("Status")
+                    b.Property<string>("CustomerId")
                         .IsRequired()
-                        .HasMaxLength(20)
+                        .HasMaxLength(10)
                         .IsUnicode(false);
+
+                    b.Property<string>("Data");
 
                     b.HasKey("Id");
 
-                    b.ToTable("PurchaseApprovals");
+                    b.HasIndex("CustomerId")
+                        .HasName("IX_CustomerId");
+
+                    b.ToTable("ApprovalData");
                 });
 
             modelBuilder.Entity("PurchaseApproval.Domain.Decision", b =>
@@ -51,6 +53,31 @@ namespace PurchaseApproval.Infrastructure.Persistence.Migrations
                     b.HasKey("ApprovalId", "Number");
 
                     b.ToTable("Decisions");
+                });
+
+            modelBuilder.Entity("PurchaseApproval.Domain.PurchaseApproval", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Approvals");
+                });
+
+            modelBuilder.Entity("PurchaseApproval.Domain.ApprovalData", b =>
+                {
+                    b.HasOne("PurchaseApproval.Domain.PurchaseApproval")
+                        .WithOne("Data")
+                        .HasForeignKey("PurchaseApproval.Domain.ApprovalData", "Id")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("PurchaseApproval.Domain.Decision", b =>

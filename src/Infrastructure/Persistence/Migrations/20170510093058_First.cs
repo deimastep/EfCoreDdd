@@ -22,6 +22,25 @@ namespace PurchaseApproval.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ApprovalData",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CustomerId = table.Column<string>(unicode: false, maxLength: 10, nullable: false),
+                    Data = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApprovalData", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ApprovalData_Approvals_Id",
+                        column: x => x.Id,
+                        principalTable: "Approvals",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Decisions",
                 columns: table => new
                 {
@@ -41,10 +60,18 @@ namespace PurchaseApproval.Infrastructure.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomerId",
+                table: "ApprovalData",
+                column: "CustomerId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ApprovalData");
+
             migrationBuilder.DropTable(
                 name: "Decisions");
 

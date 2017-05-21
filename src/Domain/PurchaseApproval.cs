@@ -19,15 +19,15 @@
         // LEAKY: ORM requirement for default constructor
         private PurchaseApproval() => _decisions = new List<Decision>();
 
-        public Guid Id { get; protected set; }
+        public Guid Id { get; protected internal set; }
 
-        public string Status { get; protected set; }
+        public string Status { get; protected internal set; }
 
-        public DateTime CreatedAt { get; protected set; }
+        public DateTime CreatedAt { get; protected internal set; }
 
         public IEnumerable<Decision> Decisions => _decisions;
 
-        public ApprovalData Data { get; protected set; }
+        public ApprovalData Data { get; protected internal set; }
 
         public void Close()
         {

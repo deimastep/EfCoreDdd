@@ -18,12 +18,12 @@
         {
         }
 
-        public int Number { get; protected set; }
+        public int Number { get; protected internal set; }
 
-        public DateTime CreatedAt { get; protected set; }
+        public DateTime CreatedAt { get; protected internal set; }
 
-        public DateTime ValidTill { get; protected set; }
+        public DateTime ValidTill { get; protected internal set; }
 
-        public string Answer { get; protected set; }
+        public string Answer { get; protected internal set; }
     }
 }

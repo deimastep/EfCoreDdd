@@ -17,11 +17,11 @@
         // LEAKY: ORM requirement for default constructor
         private PurchaseApproval2() => DecisionsInternal = new List<Decision>();
 
-        public Guid Id { get; protected set; }
+        public Guid Id { get; protected internal set; }
 
-        public DateTime CreatedAt { get; protected set; }
+        public DateTime CreatedAt { get; protected internal set; }
 
-        public string Status { get; protected set; }
+        public string Status { get; protected internal set; }
 
         public IReadOnlyCollection<IDecision> Decisions => DecisionsInternal;
 

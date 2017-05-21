@@ -14,8 +14,8 @@ namespace PurchaseApproval.Domain
         {
         }
 
-        public string CustomerId { get; protected set; }
+        public string CustomerId { get; protected internal set; }
 
-        public string Data { get; protected set; }
+        public string Data { get; protected internal set; }
     }
 }

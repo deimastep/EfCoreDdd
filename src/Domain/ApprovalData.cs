@@ -8,7 +8,7 @@ namespace PurchaseApproval.Domain
             Data = data;
         }
 
-        // LEAKY: ORM requirement for default ctor
+        // LEAKY: ORM requirement for default constructor
         // ReSharper disable once UnusedMember.Local
         private ApprovalData()
         {

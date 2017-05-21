@@ -7,10 +7,7 @@
     {
         private readonly Domain.IApprovalRepository _repo;
 
-        public Commands(Domain.IApprovalRepository repo)
-        {
-            _repo = repo;
-        }
+        public Commands(Domain.IApprovalRepository repo) => _repo = repo;
 
         public async Task Apply(ApplyRequest request)
         {

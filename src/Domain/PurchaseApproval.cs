@@ -6,23 +6,7 @@
 
     public class PurchaseApproval : IAggregateRoot<Guid>
     {
-        public Guid Id { get; protected set; }
-
-        public string Status { get; protected set; }
-
-        public DateTime CreatedAt { get; protected set; }
-
-        public IEnumerable<Decision> Decisions => _decisions;
-
         private readonly List<Decision> _decisions;
-
-        public ApprovalData Data { get; protected set; }
-
-        // LEAKY: ORM requirement for default ctor
-        private PurchaseApproval()
-        {
-            _decisions = new List<Decision>();
-        }
 
         public PurchaseApproval(Guid id, string customerId, DateTime createdAt) : this()
         {
@@ -31,6 +15,19 @@
             Status = "InProgress";
             Data = new ApprovalData(customerId, null);
         }
+
+        // LEAKY: ORM requirement for default constructor
+        private PurchaseApproval() => _decisions = new List<Decision>();
+
+        public Guid Id { get; protected set; }
+
+        public string Status { get; protected set; }
+
+        public DateTime CreatedAt { get; protected set; }
+
+        public IEnumerable<Decision> Decisions => _decisions;
+
+        public ApprovalData Data { get; protected set; }
 
         public void Close()
         {

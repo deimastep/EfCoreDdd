@@ -17,7 +17,7 @@
 
         private readonly Fixture _fixture;
         private readonly ITestOutputHelper _console;
-        
+
         public QueriesTest(Fixture fixture, ITestOutputHelper console)
         {
             _fixture = fixture;
@@ -95,14 +95,14 @@
 
         #endregion
 
-        [Theory, MemberData(nameof(GetById_ShouldReturnEntity_Data))]
+        [Theory, MemberData(nameof(GetByIdShouldReturnEntityData))]
         public async Task GetById_ShouldReturnEntity(Guid id, PurchaseApproval expected)
         {
             var actual = await _fixture.Queries.GetById(id).ConfigureAwait(false);
             Assert.True(expected.EqualByProperties(actual, _console));
         }
 
-        public static IEnumerable<object[]> GetById_ShouldReturnEntity_Data()
+        private static IEnumerable<object[]> GetByIdShouldReturnEntityData()
         {
             var entity = Fixture.Entities[0];
             yield return new object[] { entity.Id, entity };
@@ -124,7 +124,7 @@
             Assert.Null(actual);
         }
 
-        [Theory, MemberData(nameof(GetByStatus_ShouldReturnOnlyWithCertainStatus_Data))]
+        [Theory, MemberData(nameof(GetByStatusShouldReturnOnlyWithCertainStatusData))]
         public async Task GetByStatus_ShouldReturnOnlyWithCertainStatus(
             string status,
             PurchaseApproval[] expected)
@@ -133,7 +133,7 @@
             Assert.True(expected.EqualByProperties(actual.ToArray(), _console));
         }
 
-        public static IEnumerable<object[]> GetByStatus_ShouldReturnOnlyWithCertainStatus_Data()
+        private static IEnumerable<object[]> GetByStatusShouldReturnOnlyWithCertainStatusData()
         {
             var entity = Fixture.Entities[0];
             yield return new object[]
@@ -161,7 +161,7 @@
             Assert.Empty(actual);
         }
 
-        [Theory, MemberData(nameof(GetByCustomer_ShouldReturnOnlyWithCertainCustomer_Data))]
+        [Theory, MemberData(nameof(GetByCustomerShouldReturnOnlyWithCertainCustomerData))]
         public async Task GetByCustomer_ShouldReturnOnlyWithCertainCustomer(
             string customerId,
             PurchaseApproval[] expected)
@@ -170,7 +170,7 @@
             Assert.True(expected.EqualByProperties(actual.ToArray(), _console));
         }
 
-        public static IEnumerable<object[]> GetByCustomer_ShouldReturnOnlyWithCertainCustomer_Data()
+        private static IEnumerable<object[]> GetByCustomerShouldReturnOnlyWithCertainCustomerData()
         {
             var entity = Fixture.Entities[0];
             yield return new object[]

@@ -9,8 +9,6 @@
 
     public class DomainDbContext : DbContext
     {
-        public DbSet<PurchaseApproval> Approvals { get; set; }
-
         public DomainDbContext()
         {
         }
@@ -18,6 +16,8 @@
         public DomainDbContext(DbContextOptions<DomainDbContext> options) : base(options)
         {
         }
+
+        public DbSet<PurchaseApproval> Approvals { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -36,8 +36,8 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<PurchaseApproval>(b =>
-                {
+            modelBuilder.Entity<PurchaseApproval>(
+                b => {
                     b.ToTable("Approvals");
                     b.HasKey(e => e.Id);
                     b.Property(e => e.Status).HasMaxLength(20).IsRequired().IsUnicode(false);
@@ -46,16 +46,16 @@
                     b.HasOne(e => e.Data)
                         .WithOne().HasForeignKey(typeof(ApprovalData), "Id").OnDelete(DeleteBehavior.Cascade);
                 });
-            modelBuilder.Entity<ApprovalData>(b =>
-                {
+            modelBuilder.Entity<ApprovalData>(
+                b => {
                     b.ToTable("ApprovalData");
                     b.Property<Guid>("Id");
                     b.HasKey("Id");
                     b.Property(e => e.CustomerId).HasMaxLength(10).IsRequired().IsUnicode(false);
                     b.HasIndex(e => e.CustomerId).HasName("IX_CustomerId");
                 });
-            modelBuilder.Entity<Decision>(b =>
-                {
+            modelBuilder.Entity<Decision>(
+                b => {
                     b.ToTable("Decisions");
                     b.Property<Guid>("ApprovalId");
                     b.Property(e => e.Number);

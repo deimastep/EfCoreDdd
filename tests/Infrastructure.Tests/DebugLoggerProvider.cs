@@ -21,28 +21,19 @@
 
         public class Logger : ILogger
         {
-            public bool IsEnabled(LogLevel logLevel)
-            {
-                return true;
-            }
+            public bool IsEnabled(LogLevel logLevel) => true;
 
             public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
             {
                 System.Diagnostics.Debug.WriteLine(formatter(state, exception));
             }
 
-            public IDisposable BeginScope<TState>(TState state)
-            {
-                return null;
-            }
+            public IDisposable BeginScope<TState>(TState state) => null;
         }
 
         private class NullLogger : ILogger
         {
-            public bool IsEnabled(LogLevel logLevel)
-            {
-                return false;
-            }
+            public bool IsEnabled(LogLevel logLevel) => false;
 
             public void Log<TState>(
                 LogLevel logLevel,
@@ -53,10 +44,7 @@
             {
             }
 
-            public IDisposable BeginScope<TState>(TState state)
-            {
-                return null;
-            }
+            public IDisposable BeginScope<TState>(TState state) => null;
         }
     }
 }

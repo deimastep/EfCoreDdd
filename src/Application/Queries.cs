@@ -10,15 +10,17 @@
 
     public class Queries : IQueries
     {
+        // The good place for Automapper to do its job.
         internal static readonly Expression<Func<Domain.PurchaseApproval, PurchaseApproval>> MapExpression = a => new PurchaseApproval
         {
             Status = a.Status,
-            Decision = a.Decisions.OrderByDescending(d => d.CreatedAt).Select(d => new Decision
-            {
-                Answer = d.Answer,
-                ValidTill = d.ValidTill,
-                CreatedAt = d.CreatedAt
-            }).FirstOrDefault(),
+            Decision = a.Decisions.OrderByDescending(d => d.CreatedAt).Select(
+                d => new Decision
+                {
+                    Answer = d.Answer,
+                    ValidTill = d.ValidTill,
+                    CreatedAt = d.CreatedAt
+                }).FirstOrDefault(),
             CustomerId = a.Data.CustomerId,
             Id = a.Id,
             CreatedAt = a.CreatedAt
@@ -26,10 +28,7 @@
 
         private readonly DomainDbContext _db;
 
-        public Queries(DomainDbContext db)
-        {
-            _db = db;
-        }
+        public Queries(DomainDbContext db) => _db = db;
 
         public async Task<PurchaseApproval> GetById(Guid id)
         {

@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
     using Domain;
     using Tests.Core;
     using Xunit;

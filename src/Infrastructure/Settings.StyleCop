@@ -5,6 +5,7 @@
         <BooleanProperty Name="AnalyzeDesignerFiles">False</BooleanProperty>
         <CollectionProperty Name="GeneratedFileFilters">
           <Value>Persistence\Migrations\*.cs$</Value>
+          <Value>Persistence\Migrations2\*.cs$</Value>
         </CollectionProperty>
       </ParserSettings>
     </Parser>

@@ -51,5 +51,10 @@
             _decisions.Remove(item);
             return true;
         }
+
+        public void StupidMethodToRemoveMandatoryData()
+        {
+            Data = null;
+        }
     }
 }

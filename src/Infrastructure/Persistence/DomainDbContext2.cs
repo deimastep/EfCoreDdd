@@ -7,13 +7,13 @@
     using Microsoft.EntityFrameworkCore.Infrastructure;
     using Microsoft.EntityFrameworkCore.Metadata;
 
-    public class DomainDbContext : DbContext
+    public class DomainDbContext2 : DbContext
     {
-        public DomainDbContext()
+        public DomainDbContext2()
         {
         }
 
-        public DomainDbContext(DbContextOptions<DomainDbContext> options) : base(options)
+        public DomainDbContext2(DbContextOptions<DomainDbContext> options) : base(options)
         {
         }
 
@@ -26,7 +26,7 @@
                 return;
             }
             var connectionString = ConfigurationManager.ConnectionStrings["PurchaseApproval"]?.ConnectionString
-                ?? @"Server=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|PurchaseApprovalDB.mdf;Database=PurchaseApproval-TEST;Trusted_Connection=True;";
+                ?? @"Server=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|PurchaseApprovalDB2.mdf;Database=PurchaseApproval2-TEST;Trusted_Connection=True;";
             optionsBuilder.UseSqlServer(connectionString);
             optionsBuilder
                 .ConfigureWarnings(wa => wa.Log(CoreEventId.ModelValidationWarning))
@@ -41,29 +41,38 @@
                     b.ToTable("Approvals");
                     b.HasKey(e => e.Id);
                     b.Property(e => e.Status).HasMaxLength(20).IsRequired().IsUnicode(false);
-
-                    // Foreign keys in those relationships are required because they are part of the PK
-                    // in the related entities.
                     b.HasOne(e => e.Data)
-                        .WithOne().HasForeignKey<ApprovalData>("Id").OnDelete(DeleteBehavior.Cascade);
+                        .WithOne().HasForeignKey<ApprovalData>("ApprovalId")
+                        // This will guarantee that the related entity will be deleted in DB on SaveChanges()
+                        // when PurchaseApproval.Data is assigned to null.
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Cascade);
                     b.HasMany(e => e.Decisions)
-                        .WithOne().HasForeignKey("ApprovalId").OnDelete(DeleteBehavior.Cascade);
+                        .WithOne().HasForeignKey("ApprovalId")
+                        // This will guarantee that the related entity will be deleted in DB on SaveChanges()
+                        // when it will be removed from PurchaseApproval.Decisions collection.
+                        .IsRequired()
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
             modelBuilder.Entity<ApprovalData>(
                 b => {
                     b.ToTable("ApprovalData");
-                    b.Property<Guid>("Id");
-                    // PK is shadow property "Id"
+
+                    // PK is shadow property as IDENTITY in the DB
+                    b.Property<int>("Id").UseSqlServerIdentityColumn();
                     b.HasKey("Id");
+
                     b.Property(e => e.CustomerId).HasMaxLength(10).IsRequired().IsUnicode(false);
                     b.HasIndex(e => e.CustomerId).HasName("IX_CustomerId");
                 });
             modelBuilder.Entity<Decision>(
                 b => {
                     b.ToTable("Decisions");
-                    b.Property<Guid>("ApprovalId");
-                    // PK is composite key with shadow (the same time as foreign key) and real properties.
-                    b.HasKey("ApprovalId", nameof(Decision.Number));
+
+                    // PK is shadow property as IDENTITY in the DB
+                    b.Property<int>("Id").UseSqlServerIdentityColumn();
+                    b.HasKey("Id");
+
                     b.Property(e => e.Answer).HasMaxLength(20).IsRequired().IsUnicode(false);
                 });
         }

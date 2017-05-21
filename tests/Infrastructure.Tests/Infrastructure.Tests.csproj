@@ -207,6 +207,7 @@
     </Compile>
     <Compile Include="DebugLoggerProvider.cs" />
     <Compile Include="Persistence\Approval2PersistenceTest.cs" />
+    <Compile Include="Persistence\ApprovalPersistence2Test.cs" />
     <Compile Include="Persistence\ApprovalPersistenceTest.cs" />
     <Compile Include="Persistence\ApprovalRepositoryTest.cs" />
     <Compile Include="Persistence\GlobalFixture.cs" />

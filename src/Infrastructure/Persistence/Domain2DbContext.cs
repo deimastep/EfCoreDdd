@@ -45,10 +45,10 @@
                     b.HasKey(e => e.Id);
                     b.Property(e => e.Status).HasMaxLength(20).IsRequired().IsUnicode(false);
                     b.Ignore(e => e.Decisions);
+                    b.HasOne(typeof(ApprovalData), ApprovalToDataNavigationName)
+                        .WithOne().HasForeignKey<ApprovalData>("Id").OnDelete(DeleteBehavior.Cascade);
                     b.HasMany(typeof(Decision), ApprovalToDecisionsNavigationName)
                         .WithOne().HasForeignKey("ApprovalId").OnDelete(DeleteBehavior.Cascade);
-                    b.HasOne(typeof(ApprovalData), ApprovalToDataNavigationName)
-                        .WithOne().HasForeignKey(typeof(ApprovalData), "Id").OnDelete(DeleteBehavior.Cascade);
                 });
             modelBuilder.Entity<ApprovalData>(
                 b => {
@@ -62,7 +62,6 @@
                 b => {
                     b.ToTable("Decisions");
                     b.Property<Guid>("ApprovalId");
-                    b.Property(e => e.Number);
                     b.HasKey("ApprovalId", nameof(Decision.Number));
                     b.Property(e => e.Answer).HasMaxLength(20).IsRequired().IsUnicode(false);
                 });

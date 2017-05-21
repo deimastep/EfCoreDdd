@@ -213,7 +213,13 @@
     </Compile>
     <Compile Include="Persistence\ApprovalRepository.cs" />
     <Compile Include="Persistence\Domain2DbContext.cs" />
+    <Compile Include="Persistence\DomainDbContext2.cs" />
     <Compile Include="Persistence\DomainDbContext.cs" />
+    <Compile Include="Persistence\Migrations2\20170521211633_First.cs" />
+    <Compile Include="Persistence\Migrations2\20170521211633_First.designer.cs">
+      <DependentUpon>20170521211633_First.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Persistence\Migrations2\DomainDbContext2ModelSnapshot.cs" />
     <Compile Include="Persistence\Migrations\20170510093058_First.cs" />
     <Compile Include="Persistence\Migrations\20170510093058_First.designer.cs">
       <DependentUpon>20170510093058_First.cs</DependentUpon>

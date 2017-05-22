@@ -1,6 +1,5 @@
 ﻿namespace PurchaseApproval.Infrastructure.Persistence
 {
-    using System;
     using System.Configuration;
     using Domain;
     using Microsoft.EntityFrameworkCore;
@@ -41,6 +40,7 @@
                     b.ToTable("Approvals");
                     b.HasKey(e => e.Id);
                     b.Property(e => e.Status).HasMaxLength(20).IsRequired().IsUnicode(false);
+
                     b.HasOne(e => e.Data)
                         .WithOne().HasForeignKey<ApprovalData>("ApprovalId")
                         // This will guarantee that the related entity will be deleted in DB on SaveChanges()
@@ -75,6 +75,14 @@
 
                     b.Property(e => e.Answer).HasMaxLength(20).IsRequired().IsUnicode(false);
                 });
+
+            // This is the way in EF Core 1.1 to set backing field for the **navigation** property
+            // https://blog.oneunicorn.com/2016/10/28/collection-navigation-properties-and-fields-in-ef-core-1-1/
+            // https://github.com/aspnet/EntityFramework/issues/6674
+            // BEWARE: should be done at the end of model configuration because of the bug
+            // https://github.com/aspnet/EntityFramework/issues/7674
+            var decisionNavigation = modelBuilder.Entity<PurchaseApproval>().Metadata.FindNavigation(nameof(PurchaseApproval.Decisions));
+            decisionNavigation.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

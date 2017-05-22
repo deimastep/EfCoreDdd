@@ -28,7 +28,10 @@
 
         private readonly DomainDbContext _db;
 
-        public Queries(DomainDbContext db) => _db = db;
+        public Queries(DomainDbContext db)
+        {
+            _db = db;
+        }
 
         public async Task<PurchaseApproval> GetById(Guid id)
         {

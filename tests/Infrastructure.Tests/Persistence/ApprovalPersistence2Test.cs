@@ -138,7 +138,7 @@
                 .Include(a => a.Decisions)
                 .Include(a => a.Data)
                 .SingleOrDefaultAsync(a => a.Id == id);
-            expected.CancelDecision(1);
+            Assert.True(expected.CancelDecision(1));
             Assert.Equal(1, await db.SaveChangesAsync());
 
             db = GetDb();

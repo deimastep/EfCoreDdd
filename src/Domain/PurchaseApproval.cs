@@ -6,7 +6,7 @@
 
     public class PurchaseApproval : IAggregateRoot<Guid>
     {
-        private readonly List<Decision> _decisions;
+        private readonly List<Decision> _decisions = new List<Decision>();
 
         public PurchaseApproval(Guid id, string customerId, DateTime createdAt) : this()
         {
@@ -17,7 +17,9 @@
         }
 
         // LEAKY: ORM requirement for default constructor
-        private PurchaseApproval() => _decisions = new List<Decision>();
+        private PurchaseApproval()
+        {
+        }
 
         public Guid Id { get; protected internal set; }
 
@@ -25,7 +27,10 @@
 
         public DateTime CreatedAt { get; protected internal set; }
 
-        public IEnumerable<Decision> Decisions => _decisions;
+        // Despite that List<> already implement IReadOnlyCollection<>,
+        // we use AsReadOnly() here to demonstrate the concept of how EF Core
+        // handle fully encapsulated collection by using backing private readonly field
+        public IReadOnlyCollection<Decision> Decisions => _decisions.AsReadOnly();
 
         public ApprovalData Data { get; protected internal set; }
 

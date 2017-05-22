@@ -9,7 +9,10 @@
     {
         private readonly DomainDbContext _db;
 
-        public ApprovalRepository(DomainDbContext db) => _db = db;
+        public ApprovalRepository(DomainDbContext db)
+        {
+            _db = db;
+        }
 
         public async Task<PurchaseApproval> GetById(Guid id)
         {

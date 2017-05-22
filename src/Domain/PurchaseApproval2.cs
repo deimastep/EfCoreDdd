@@ -15,7 +15,10 @@
         }
 
         // LEAKY: ORM requirement for default constructor
-        private PurchaseApproval2() => DecisionsInternal = new List<Decision>();
+        private PurchaseApproval2()
+        {
+            DecisionsInternal = new List<Decision>();
+        }
 
         public Guid Id { get; protected internal set; }
 

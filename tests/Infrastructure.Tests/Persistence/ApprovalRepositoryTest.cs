@@ -103,7 +103,7 @@
 
             repo = GetRepo();
             expected = await repo.GetById(expected.Id);
-            expected.CancelDecision(1);
+            Assert.True(expected.CancelDecision(1));
             await repo.Save();
 
             repo = GetRepo();

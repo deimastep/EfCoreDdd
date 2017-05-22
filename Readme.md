@@ -17,15 +17,15 @@ The sample solution to demonstrate EF Core capabilities to store encapsulated DD
 
 ### Domain
 
-There are two aggregate roots here. ``PurchaseApproval`` and ``PurchaseApproval2``.
+There are two aggregate roots: ``PurchaseApproval`` and ``PurchaseApproval2``.
 They are mainly the same but are targeted to demonstrate different approach to tackle some EF core mapping challenges.
 
-Models properties are protected (``protected internal`` or ``private``).
+All domain models properties are protected (``protected internal`` or ``private``).
 From the point of encapsulation ``PurchaseApproval2`` expose interfaces for the related objects when ``PurchaseApproval`` expose concrete classes.
 
 ``PurchaseApproval``
 
-* Has read only collection property ``Decisions`` exposed as ``IEnumerable<Decision>`` with backing private read only field.
+* Has read only collection property ``Decisions`` exposed as ``IReadOnlyCollection<Decision>`` with backing private read only field.
 * Has reference property ``Data`` as ``ApprovalData`` with protected setter.
 
 ``PurchaseApproval2``
@@ -44,9 +44,9 @@ Here in ``Persistence`` folder 3 examples of EF Core DbContext are implemented t
 Demonstrates how EF Core can help to map domain model ``PurchaseApproval``:
 
 * Using [shadow properties](https://docs.microsoft.com/en-us/ef/core/modeling/shadow-properties) to map not existent model properties which are needed for persistence (like related entities primary keys, related entities foreign keys).
-* [Relationships](https://docs.microsoft.com/en-us/ef/core/modeling/relationships) to use shadow properties as foreign keys.
+* [Relationships](https://docs.microsoft.com/en-us/ef/core/modeling/relationships) using shadow properties as foreign keys and read only backed field.
 
-  The read only ``IEnumerable<Decision>`` property ``Decisions`` is successfully mapped by EF Core. For this to work backing collection should be created in the default constructor.
+  The read only collection navigation property ``Decisions`` of type ``IReadOnlyCollection<Decision>`` is successfully mapped by EF Core. For this to work backing collection should be created in the default constructor and EF model configuration should be informed to use backing field.
 
 * Here related objects (``Decisions`` and ``Data``) have foreign keys as their primary keys.
 

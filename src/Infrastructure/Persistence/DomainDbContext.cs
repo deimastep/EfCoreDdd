@@ -61,11 +61,18 @@
             modelBuilder.Entity<Decision>(
                 b => {
                     b.ToTable("Decisions");
-                    b.Property<Guid>("ApprovalId");
                     // PK is composite key with shadow (the same time as foreign key) and real properties.
                     b.HasKey("ApprovalId", nameof(Decision.Number));
                     b.Property(e => e.Answer).HasMaxLength(20).IsRequired().IsUnicode(false);
                 });
+
+            // This is the way in EF Core 1.1 to set backing field for the **navigation** property
+            // https://blog.oneunicorn.com/2016/10/28/collection-navigation-properties-and-fields-in-ef-core-1-1/
+            // https://github.com/aspnet/EntityFramework/issues/6674
+            // BEWARE: should be done at the end of model configuration because of the bug
+            // https://github.com/aspnet/EntityFramework/issues/7674
+            var decisionNavigation = modelBuilder.Entity<PurchaseApproval>().Metadata.FindNavigation(nameof(PurchaseApproval.Decisions));
+            decisionNavigation.SetPropertyAccessMode(PropertyAccessMode.Field);
         }
     }
 }

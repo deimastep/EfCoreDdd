@@ -1,6 +1,5 @@
 ﻿namespace PurchaseApproval.Infrastructure.Persistence
 {
-    using System;
     using System.Configuration;
     using Domain;
     using Microsoft.EntityFrameworkCore;
@@ -52,8 +51,7 @@
             modelBuilder.Entity<ApprovalData>(
                 b => {
                     b.ToTable("ApprovalData");
-                    b.Property<Guid>("Id");
-                    // PK is shadow property "Id"
+                    // PK is shadow property "Id" with known type from configured relationship
                     b.HasKey("Id");
                     b.Property(e => e.CustomerId).HasMaxLength(10).IsRequired().IsUnicode(false);
                     b.HasIndex(e => e.CustomerId).HasName("IX_CustomerId");
@@ -61,7 +59,7 @@
             modelBuilder.Entity<Decision>(
                 b => {
                     b.ToTable("Decisions");
-                    // PK is composite key with shadow (the same time as foreign key) and real properties.
+                    // PK is composite key with shadow property and real properties.
                     b.HasKey("ApprovalId", nameof(Decision.Number));
                     b.Property(e => e.Answer).HasMaxLength(20).IsRequired().IsUnicode(false);
                 });

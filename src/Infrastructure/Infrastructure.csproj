@@ -215,6 +215,8 @@
     <Compile Include="Persistence\Domain2DbContext.cs" />
     <Compile Include="Persistence\DomainDbContext2.cs" />
     <Compile Include="Persistence\DomainDbContext.cs" />
+    <Compile Include="Persistence\FakeModels\PurchaseApproval2.cs" />
+    <Compile Include="Persistence\FakeModels\PurchaseApproval.cs" />
     <Compile Include="Persistence\Migrations2\20170521211633_First.cs" />
     <Compile Include="Persistence\Migrations2\20170521211633_First.designer.cs">
       <DependentUpon>20170521211633_First.cs</DependentUpon>
@@ -229,6 +231,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Persistence\FakeModels\PurchaseApproval2.cd" />
+    <None Include="Persistence\FakeModels\PurchaseApproval.cd" />
     <None Include="packages.config" />
     <None Include="Settings.StyleCop" />
   </ItemGroup>
